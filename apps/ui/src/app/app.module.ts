@@ -2,7 +2,7 @@ import {LOCALE_ID, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
@@ -44,6 +44,9 @@ import {EmployeeComponent} from './settings/employee/employee.component';
 import {FormErrorsComponent} from './shared/components/form-errors/form-errors.component';
 import {ProjectComponent} from './settings/project/project.component';
 import {PlannerComponent} from './planner/planner.component';
+import {ChatAssistantComponent} from "./assistant/chat-assistant.component";
+import {ColorChromeModule} from "ngx-color/chrome";
+import {MarkdownToHtmlPipe} from "./shared/components/pipes/markdowntohtml.pipe";
 
 registerLocaleData(localeDe);
 registerLocaleData(localeFr);
@@ -72,6 +75,7 @@ export function getApiConfiguration(config: AppConfig): Configuration {
     LoadingDirective,
     ModalComponent,
     NavigationComponent,
+    ChatAssistantComponent,
     UserNavigationComponent,
     UserInitialsComponent,
     NoUserFoundComponent,
@@ -106,6 +110,8 @@ export function getApiConfiguration(config: AppConfig): Configuration {
     NgbDatepickerModule,
     NgbTimepickerModule,
     NgbAccordionModule,
+    ColorChromeModule,
+    MarkdownToHtmlPipe,
     StoreModule.forRoot({
       [dataFeatureKey]: dataReducer,
       [visualFeatureKey]: visualReducer
@@ -121,7 +127,7 @@ export function getApiConfiguration(config: AppConfig): Configuration {
     LottieModule.forRoot({player: playerFactory}),
     ToastsComponent
   ],
-  providers: [{provide: LOCALE_ID, useValue: getLocale()}, DatePipe],
+  providers: [{provide: LOCALE_ID, useValue: getLocale()},DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

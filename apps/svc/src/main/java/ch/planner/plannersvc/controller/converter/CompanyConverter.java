@@ -12,6 +12,9 @@ public class CompanyConverter {
     if (company == null) {
       return null;
     }
-    return new CompanyDto().id(company.getId()).name(company.getName()).logo(company.getLogo());
+    return new CompanyDto()
+            .id(company.getId())
+            .name(company.getName())
+            .logo(company.getLogo());
   }
 }

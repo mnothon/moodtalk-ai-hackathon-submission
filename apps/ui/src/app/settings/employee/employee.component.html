@@ -1,15 +1,37 @@
 <app-modal #modal>
   <ng-container slot="content">
-    <h4 i18n="@@employee.title">Mitarbeiter hinzufügen</h4>
+    <h4 i18n="@@employee.title">{{ title }}</h4>
 
     <div class="form-group mb-5">
       <label class="cursor-pointer fw-bold mb-1" for="name-form-control" i18n="@@employee.name"> Name: </label>
       <input class="form-control" type="text" id="name-form-control" [formControl]="nameFormControl" />
       <app-form-errors [control]="nameFormControl"></app-form-errors>
     </div>
+
+      <div class="form-group mb-3">
+          <label class="cursor-pointer fw-bold mb-1" for="surname-form-control" i18n="@@employee.surname">Surname:</label>
+          <input class="form-control" type="text" id="surname-form-control" [formControl]="surnameFormControl" />
+          <app-form-errors [control]="surnameFormControl"></app-form-errors>
+      </div>
+
+      <div class="form-group mb-5">
+          <label class="cursor-pointer fw-bold mb-1" for="email-form-control" i18n="@@employee.email">Email:</label>
+          <input class="form-control" type="email" id="email-form-control" [formControl]="emailFormControl" />
+          <app-form-errors [control]="emailFormControl"></app-form-errors>
+      </div>
+
+      <div class="form-group mb-5">
+          <label class="cursor-pointer fw-bold mb-1" i18n="@@employee.workLocation">Work Location:</label>
+          <select class="form-select" [formControl]="remoteFormControl">
+              <option *ngFor="let option of workLocationOptions" [ngValue]="option.value">
+                  {{ option.label }}
+              </option>
+          </select>
+      </div>
+
   </ng-container>
   <div slot="footer" class="d-flex justify-content-between">
-    <app-button (click)="addEmployee()" [disabled]="nameFormControl.invalid" i18n="@@add">Hinzufügen</app-button>
-    <app-button variant="gray" (click)="modal.dismiss()" i18n="@@cancel">Abbrechen</app-button>
+    <app-button (click)="submit()" [disabled]="isDisabled()" i18n="@@add">{{ submitButtonText }}</app-button>
+    <app-button variant="gray" (click)="modal.dismiss()" i18n="@@cancel">Cancel</app-button>
   </div>
 </app-modal>

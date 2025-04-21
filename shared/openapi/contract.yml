@@ -41,19 +41,28 @@ paths:
 
   /employees:
     get:
-      summary: Get Employees
+      summary: Get Employees with pagination
       operationId: getEmployees
       tags:
         - Planner
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number to retrieve
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+          description: Number of items per page
       responses:
         "200":
-          description: Employees
+          description: Paginated employees
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/EmployeeDto"
+                $ref: "#/components/schemas/EmployeePagedResponse"
         "401":
           description: Unauthorized
     post:
@@ -102,6 +111,22 @@ paths:
                 $ref: "#/components/schemas/EmployeeDto"
         "401":
           description: Unauthorized
+    delete:
+      summary: Delete Employee
+      operationId: removeEmployee
+      parameters:
+        - in: path
+          name: employeeId
+          schema:
+            $ref: "#/components/schemas/UUID"
+          required: true
+      tags:
+        - Planner
+      responses:
+        "200":
+          description: Employee deleted
+        "401":
+          description: Unauthorized
 
   /projects:
     get:
@@ -109,15 +134,24 @@ paths:
       operationId: getProjects
       tags:
         - Planner
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number to retrieve
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+          description: Number of items per page
       responses:
         "200":
-          description: Projects
+          description: Paginated projects
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ProjectDto"
+                $ref: "#/components/schemas/ProjectsPagedResponse"
         "401":
           description: Unauthorized
     post:
@@ -166,9 +200,212 @@ paths:
                 $ref: "#/components/schemas/ProjectDto"
         "401":
           description: Unauthorized
+    delete:
+      summary: Delete Project
+      operationId: removeProject
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            $ref: "#/components/schemas/UUID"
+          required: true
+      tags:
+        - Planner
+      responses:
+        "200":
+          description: Project deleted
+        "401":
+          description: Unauthorized
+
+  /assignments:
+    get:
+      summary: Get assignments for a date range
+      operationId: getAssignments
+      tags:
+        - Planner
+      parameters:
+        - in: query
+          name: employeeId
+          schema:
+            $ref: "#/components/schemas/UUID"
+          description: Filter by employee ID
+        - in: query
+          name: projectId
+          schema:
+            $ref: "#/components/schemas/UUID"
+          description: Filter by project ID
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+          required: true
+          description: Start date (inclusive)
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+          required: true
+          description: End date (inclusive)
+      responses:
+        "200":
+          description: List of assignments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AssignmentDto"
+        "401":
+          description: Unauthorized
+
+    post:
+      summary: Create or update an assignment
+      operationId: saveAssignment
+      tags:
+        - Planner
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssignmentProperties"
+      responses:
+        "200":
+          description: Assignment saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignmentDto"
+        "401":
+          description: Unauthorized
+
+  /assignments/{assignmentId}:
+    delete:
+      summary: Delete an assignment
+      operationId: deleteAssignment
+      tags:
+        - Planner
+      parameters:
+        - in: path
+          name: assignmentId
+          schema:
+            $ref: "#/components/schemas/UUID"
+          required: true
+      responses:
+        "204":
+          description: Assignment deleted
+        "401":
+          description: Unauthorized
+        "404":
+          description: Assignment not found
+
+  /chat:
+    get:
+      summary: Get messages
+      operationId: getMessages
+      tags:
+        - Planner
+      parameters:
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+          description: Start date (inclusive)
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+          description: End date (inclusive)
+        - in: query
+          name: sessionId
+          schema:
+            type: string
+          description: Filter messages by session ID
+          required: false
+      responses:
+        "200":
+          description: Message history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AssistantMessageDto"
+        "401":
+          description: Unauthorized
+
+    post:
+      summary: Chat with Assistant
+      operationId: chat
+      tags:
+        - Planner
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssistantMessageProperties"
+      responses:
+        "200":
+          description: Chat response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssistantMessageDto"
+        "401":
+          description: Unauthorized
 
 components:
   schemas:
+    EmployeePagedResponse:
+      type: object
+      description: Generic pagination wrapper for any type
+      properties:
+        totalPages:
+          type: integer
+        totalItems:
+          type: integer
+        currentPage:
+          type: integer
+        pageSize:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/EmployeeDto"
+      required:
+        - totalPages
+        - totalItems
+        - currentPage
+        - pageSize
+        - results
+
+    ProjectsPagedResponse:
+      type: object
+      description: Generic pagination wrapper for any type
+      properties:
+        totalPages:
+          type: integer
+        totalItems:
+          type: integer
+        currentPage:
+          type: integer
+        pageSize:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProjectDto"
+      required:
+        - totalPages
+        - totalItems
+        - currentPage
+        - pageSize
+        - results
+
+
     LanguageDto:
       type: string
       enum:
@@ -219,8 +456,18 @@ components:
       properties:
         name:
           type: string
+        surname:
+          type: string
+        email:
+          type: string
+          format: email
+        worksRemotely:
+          type: boolean
       required:
         - name
+        - surname
+        - email
+        - worksRemotely
 
     EmployeeDto:
       allOf:
@@ -239,9 +486,12 @@ components:
           type: string
         color:
           type: string
+        mustBeOnPremises:
+          type: boolean
       required:
         - name
         - color
+        - mustBeOnPremises
 
     ProjectDto:
       allOf:
@@ -252,6 +502,65 @@ components:
               $ref: "#/components/schemas/UUID"
           required:
             - id
+
+    AssignmentProperties:
+      type: object
+      properties:
+        employeeId:
+          $ref: "#/components/schemas/UUID"
+        projectId:
+          $ref: "#/components/schemas/UUID"
+        date:
+          type: string
+          format: date
+      required:
+        - employeeId
+        - projectId
+        - date
+
+    AssignmentDto:
+      allOf:
+        - $ref: "#/components/schemas/AssignmentProperties"
+        - type: object
+          properties:
+            id:
+              $ref: "#/components/schemas/UUID"
+          required:
+            - id
+
+    AssistantMessageProperties:
+      type: object
+      description: "Represents a single message in a chat conversation"
+      required:
+        - sender
+        - message
+        - timestamp
+      properties:
+        sender:
+          type: string
+          enum: [ "user", "bot"]
+        message:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+          description: "ISO 8601 timestamp in UTC"
+          example: "2023-07-20T12:34:56Z"
+        sessionId:
+          type: string
+          description: "Unique identifier for the chat session"
+          example: "session-abc123-def456"
+
+    AssistantMessageDto:
+      allOf:
+        - $ref: "#/components/schemas/AssistantMessageProperties"
+        - type: object
+          properties:
+            id:
+              $ref: "#/components/schemas/UUID"
+          required:
+            - id
+
 
     UUID:
       type: string

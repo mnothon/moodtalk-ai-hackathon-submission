@@ -1,5 +1,5 @@
 <div class="d-flex flex-row">
-  <h3 class="m-0 flex-grow-1">Planung</h3>
+  <h3 class="m-0 flex-grow-1">Planning</h3>
 </div>
 
 <div class="table-wrapper mt-3 mb-6 bg-white shadow-sm">
@@ -19,19 +19,44 @@
       <th>{{ nthDayOfWeek(5) | date: "dd.MM.yyyy" }}</th>
       <th>{{ nthDayOfWeek(6) | date: "dd.MM.yyyy" }}</th>
     </tr>
-    @for (employee of employees; track employee) {
+    @for (employee of pagedEmployees.results; track employee) {
       <tr class="bg-gray-50-hover cursor-pointer">
-        <th>{{ employee.name }}</th>
+        <th>{{ employee.name }} {{ employee.surname }}</th>
         @for (day of [0, 1, 2, 3, 4, 5, 6]; track day) {
-          <td>
-            <ng-select [multiple]="false" [searchable]="true" [clearable]="true" style="width: 100%">
-              @for (project of projects; track project) {
-                <ng-option [value]="project.id">{{ project.name }}</ng-option>
-              }
-            </ng-select>
-          </td>
+            <td>
+                <ng-select
+                        [ngModel]="getAssignment(employee.id, nthDayOfWeek(day))?.projectId"
+                        (ngModelChange)="updateAssignment(employee.id, nthDayOfWeek(day), $event)"
+                        [multiple]="false"
+                        [searchable]="true"
+                        [disabled]="isWeekend(day)"
+                        [ngbTooltip]="isWeekend(day) ? 'Assignments cannot be added on weekends' : null"
+                        placement="top"
+                        [clearable]="true"
+                        style="width: 100%"
+                        [style.--selected-project-bg-color]="getProjectColor(getAssignment(employee.id, nthDayOfWeek(day))?.projectId)">
+
+                    @for (project of projects; track project) {
+                        <ng-option
+                                [value]="project.id"
+                                [disabled]="employee.worksRemotely && project.mustBeOnPremises"
+                                [ngbTooltip]="(employee.worksRemotely && project.mustBeOnPremises) ? ('Employee works remotely and cannot be assigned to this on-premises project.') : null"
+                                placement="top" >
+                            {{ project.name }}
+                        </ng-option>
+                    }
+                </ng-select>
+            </td>
+
         }
       </tr>
     }
   </table>
 </div>
+<ngb-pagination
+        [pageSize]="pagedEmployees.pageSize"
+        [collectionSize]="pagedEmployees.totalItems"
+        (pageChange)="changePage($event)"
+        [boundaryLinks]="true"
+        [page]="pagedEmployees.currentPage">
+</ngb-pagination>

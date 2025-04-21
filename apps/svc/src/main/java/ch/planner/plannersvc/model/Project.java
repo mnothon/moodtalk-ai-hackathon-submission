@@ -25,4 +25,9 @@ public class Project extends CompanyAwareBaseEntity {
   @Column(name = "color", nullable = false)
   @Setter
   private String color;
+
+
+  @Column(name = "must_be_on_premises", nullable = false)
+  @Setter
+  private Boolean mustBeOnPremises;
 }

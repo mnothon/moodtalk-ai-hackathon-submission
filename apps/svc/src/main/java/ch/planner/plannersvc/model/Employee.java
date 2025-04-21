@@ -20,6 +20,18 @@ public class Employee extends CompanyAwareBaseEntity {
   @Setter
   private String name;
 
+  @Column(name = "surname", nullable = false)
+  @Setter
+  private String surname;
+
+  @Column(name = "email", nullable = false)
+  @Setter
+  private String email;
+
+  @Column(name = "works_remotely", nullable = false)
+  @Setter
+  private Boolean worksRemotely;
+
   @Column(name = "lang", nullable = false)
   @Enumerated(EnumType.STRING)
   @Setter

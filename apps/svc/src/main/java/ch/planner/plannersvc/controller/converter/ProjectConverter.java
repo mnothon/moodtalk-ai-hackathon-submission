@@ -25,7 +25,11 @@ public class ProjectConverter {
       return null;
     }
 
-    return new ProjectDto().id(project.getId()).name(project.getName()).color(project.getColor());
+    return new ProjectDto()
+            .id(project.getId())
+            .name(project.getName())
+            .mustBeOnPremises(project.getMustBeOnPremises())
+            .color(project.getColor());
   }
 
   public static Project fromProperties(ProjectProperties properties) {
@@ -33,6 +37,10 @@ public class ProjectConverter {
       return null;
     }
 
-    return Project.builder().name(properties.getName()).color(properties.getColor()).build();
+    return Project.builder()
+            .name(properties.getName())
+            .color(properties.getColor())
+            .mustBeOnPremises(properties.getMustBeOnPremises())
+            .build();
   }
 }

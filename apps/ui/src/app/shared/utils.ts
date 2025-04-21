@@ -132,3 +132,7 @@ export const getLocale = (defaultLocale = 'de-CH') => {
       return defaultLocale;
   }
 };
+
+export const getCurrentTimeStampAsString = (): string => {
+  return new Date().toISOString();
+}

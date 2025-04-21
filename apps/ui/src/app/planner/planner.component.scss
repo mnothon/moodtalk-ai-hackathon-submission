@@ -1,0 +1,10 @@
+:host {
+  ::ng-deep ng-select {
+    .ng-select-container {
+      background-color: var(--selected-project-bg-color, white) !important;
+    }
+    .ng-input > input {
+      background-color: transparent !important;
+    }
+  }
+}

@@ -25,7 +25,12 @@ public class EmployeeConverter {
       return null;
     }
 
-    return new EmployeeDto().id(employee.getId()).name(employee.getName());
+    return new EmployeeDto()
+            .id(employee.getId())
+            .name(employee.getName())
+            .surname(employee.getSurname())
+            .worksRemotely(employee.getWorksRemotely())
+            .email(employee.getEmail());
   }
 
   public static Employee fromProperties(EmployeeProperties properties) {
@@ -33,6 +38,11 @@ public class EmployeeConverter {
       return null;
     }
 
-    return Employee.builder().name(properties.getName()).build();
+    return Employee.builder()
+            .name(properties.getName())
+            .surname(properties.getSurname())
+            .email(properties.getEmail())
+            .worksRemotely(properties.getWorksRemotely())
+            .build();
   }
 }

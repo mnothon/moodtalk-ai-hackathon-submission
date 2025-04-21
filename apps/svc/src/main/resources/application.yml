@@ -40,3 +40,19 @@ spring:
         - http://app.planner.localhost
       resourceServers:
         - http://id.planner.localhost/realms/planner
+
+langchain4j:
+  azure-open-ai:
+    chat-model:
+      endpoint:                    https://${AZURE_RESOURCE_NAME}.openai.azure.com/
+      api-key:                     ${AZURE_OPENAI_API_KEY}
+      service-version:             ${AZURE_OPENAI_MODEL_VERSION}
+      deployment-name:             ${AZURE_OPENAI_DEPLOYMENT_NAME}
+      temperature:                 0.0
+      log-requests-and-responses:  true
+
+logging:
+  level:
+    root:            INFO
+    dev.langchain4j:        DEBUG
+    dev.langchain4j.service.http:  DEBUG

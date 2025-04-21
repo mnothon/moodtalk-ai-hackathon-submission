@@ -1,0 +1,44 @@
+<div class="chatbot-container" [class.open]="isOpen">
+    <div class="chatbot-toggle" (click)="toggleChat()">
+        <i class="bi bi-robot"></i>
+    </div>
+
+    <div class="chatbot-window">
+        <div class="chatbot-header">
+            <h5>AI Assistant</h5>
+            <button class="btn btn-sm btn-close" (click)="toggleChat()"></button>
+        </div>
+
+        <div class="chatbot-messages" #messageContainer>
+            <div *ngFor="let message of $messages()" class="message" [class.user]="message.sender === 'user'">
+                <div class="message-content" [innerHTML]="message.message | markdownToHtml">
+                    {{ message.message }}
+                </div>
+                <div class="message-time">
+                    {{ message.timestamp | date:'shortTime' }}
+                </div>
+            </div>
+            <div *ngIf="$isLoading()" class="message bot">
+                <div class="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chatbot-input">
+            <input
+                #messageInput
+                type="text"
+                [(ngModel)]="userInput"
+                (keyup.enter)="sendMessage()"
+                placeholder="Type your message..."
+                [disabled]="$isLoading()"
+                autofocus>
+            <button class="btn btn-primary" (click)="sendMessage()" [disabled]="!userInput || $isLoading()">
+                <i class="bi bi-send"></i>
+            </button>
+        </div>
+    </div>
+</div>

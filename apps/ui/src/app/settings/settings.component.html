@@ -1,53 +1,86 @@
 <div class="d-flex flex-row">
-  <h3 class="m-0 flex-grow-1">Mitarbeiter</h3>
-  <app-button icon="bi-plus" (click)="createEmployee()">Hinzufügen</app-button>
+  <h3 class="m-0 flex-grow-1">Employees</h3>
+  <app-button icon="bi-plus" (click)="createEmployee()">Add</app-button>
 </div>
 
-<div class="table-wrapper mt-3 mb-6 bg-white shadow-sm">
+<div class="table-wrapper mt-3 mb-4 bg-white shadow-sm">
   <table>
     <tr>
       <th i18n="@@employee.name">Name</th>
     </tr>
-    @for (employee of employees; track employee) {
+    @for (employee of pagedEmployees.results; track employee) {
       <tr class="bg-gray-50-hover cursor-pointer">
         <td>
-          {{ employee.name }}
+            {{ employee.name }} {{ employee.surname }}
+        </td>
+         <td class="text-end">
+          <div class="d-flex gap-2 justify-content-end">
+            <button class="btn btn-sm btn-outline-primary" (click)="editEmployee(employee)">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger" (click)="deleteEmployee(employee)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
         </td>
       </tr>
     }
-    @if (employees.length === 0) {
+    @if (pagedEmployees.results.length === 0) {
       <tr>
         <td colspan="3" class="text-center">
-          <i i18n="@@employees.no-employees">Keine Mitarbeiter erfasst.</i>
+          <i i18n="@@employees.no-employees">No employees recorded.</i>
         </td>
       </tr>
     }
   </table>
 </div>
+<ngb-pagination
+        [pageSize]="pagedEmployees.pageSize"
+        [collectionSize]="pagedEmployees.totalItems"
+        (pageChange)="changeEmployeesPage($event)"
+        [page]="pagedEmployees.currentPage">
+</ngb-pagination>
 
 <div class="d-flex flex-row">
-  <h3 class="m-0 flex-grow-1">Projekte</h3>
-  <app-button icon="bi-plus" (click)="createProject()">Hinzufügen</app-button>
+  <h3 class="m-0 flex-grow-1">Projects</h3>
+  <app-button icon="bi-plus" (click)="createProject()">Add</app-button>
 </div>
 
-<div class="table-wrapper mt-3 bg-white shadow-sm">
+<div class="table-wrapper mt-3 mb-4 bg-white shadow-sm">
   <table>
     <tr>
       <th i18n="@@project.name">Name</th>
     </tr>
-    @for (project of projects; track project) {
+    @for (project of pagedProjects.results; track project) {
       <tr class="bg-gray-50-hover cursor-pointer">
         <td>
           {{ project.name }}
         </td>
+        <td class="text-end">
+          <div class="d-flex gap-2 justify-content-end">
+            <button class="btn btn-sm btn-outline-primary" (click)="editProject(project)">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger" (click)="deleteProject(project)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </td>
       </tr>
     }
-    @if (projects.length === 0) {
+    @if (pagedProjects.results.length === 0) {
       <tr>
         <td colspan="3" class="text-center">
-          <i i18n="@@project.no-projects">Keine Projekte erfasst.</i>
+          <i i18n="@@project.no-projects">No projects recorded.</i>
         </td>
       </tr>
     }
   </table>
 </div>
+<ngb-pagination
+        [pageSize]="pagedProjects.pageSize"
+        [collectionSize]="pagedProjects.totalItems"
+        (pageChange)="changeProjectsPage($event)"
+        [boundaryLinks]="true"
+        [page]="pagedProjects.currentPage">
+</ngb-pagination>

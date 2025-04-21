@@ -7,9 +7,12 @@ import ch.planner.plannersvc.auth.WithSessionState;
 import ch.planner.plannersvc.controller.converter.ProjectConverter;
 import ch.planner.plannersvc.dto.ProjectDto;
 import ch.planner.plannersvc.dto.ProjectProperties;
+import ch.planner.plannersvc.dto.ProjectsPagedResponse;
 import ch.planner.plannersvc.model.Project;
 import ch.planner.plannersvc.service.ProjectService;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -29,24 +32,32 @@ public class ProjectController implements ProjectsApi {
   public ResponseEntity<ProjectDto> createProject(ProjectProperties projectProperties) {
     final Project project = ProjectConverter.fromProperties(projectProperties);
 
-    final Project saved = projectService.createProject(sessionState.getUser(), project);
+    final ProjectDto saved = projectService.createProject(sessionState.getUser(), project);
 
-    return ResponseEntity.ok(ProjectConverter.toDto(saved));
+    return ResponseEntity.ok(saved);
   }
 
   @Override
   @IsUser
-  public ResponseEntity<List<ProjectDto>> getProjects() {
-    final List<Project> projects = projectService.getProjects(sessionState.getUser());
-
-    final List<ProjectDto> dtos = ProjectConverter.toDtos(projects);
-
-    return ResponseEntity.ok(dtos);
+  public ResponseEntity<ProjectsPagedResponse> getProjects(Optional<Integer> page, Optional<Integer> pageSize) {
+    final ProjectsPagedResponse projects = projectService.getProjects(sessionState.getUser(), page, pageSize);
+    return ResponseEntity.ok(projects);
   }
 
   @Override
   @IsUser
   public ResponseEntity<ProjectDto> updateProject(String projectId, ProjectProperties projectProperties) {
-    return ProjectsApi.super.updateProject(projectId, projectProperties);
+    final Project project = ProjectConverter.fromProperties(projectProperties);
+
+    final ProjectDto updated = projectService.updateProject(sessionState.getUser(), projectId, project);
+
+    return ResponseEntity.ok(updated);
+  }
+
+  @Override
+  @IsUser
+  public ResponseEntity<Void> removeProject(String projectId) {
+    projectService.removeProject(sessionState.getUser(), projectId);
+    return ResponseEntity.noContent().build();
   }
 }

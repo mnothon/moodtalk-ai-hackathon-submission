@@ -2,7 +2,7 @@
 
 Welcome to the Hackathon Application.
 
-This is a quick setup guide to set up the appliaction contained in this repository.
+This is a quick setup guide to set up the application contained in this repository.
 
 ## Environment setup & Startup
 1. Install a Java & Angular IDE, Intellij has a free ultimate licenses for students and teachers, and a 30 day test period. You can also use Visual Studio Code.
@@ -22,4 +22,14 @@ This is a quick setup guide to set up the appliaction contained in this reposito
 8. Follow the instructions in the [Service App](./apps/svc/README.md#setup) to start the Service App
 9. Navigate to [http://app.planner.localhost](http://app.planner.localhost) to access the UI App
    1. Login data is 'admin@planner.ch' with password 'admin'
+
+## Environment variable setup
+
+The application uses the following environment variables:
+- `AZURE_RESOURCE_NAME` = The name of the Azure resource
+- `AZURE_OPENAI_DEPLOYMENT_NAME` = The name of the Azure OpenAI deployment
+- `AZURE_OPENAI_MODEL_VERSION` = The version of the Azure OpenAI model
+- `AZURE_OPENAI_API_KEY` = The API key for the Azure OpenAI service
+
+
 
