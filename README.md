@@ -1,6 +1,8 @@
 # Hackathon Application
 
-Welcome to the Hackathon Application.
+Welcome to my Hackathon Application.
+
+You can view a video demo of the app here: https://youtu.be/pnE2H6Tfz_8
 
 This is a quick setup guide to set up the application contained in this repository.
 
